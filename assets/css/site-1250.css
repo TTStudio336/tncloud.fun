@@ -1,0 +1,4 @@
+/* Layout override for screens up to 1250px */
+#box {
+  width: 1100px;
+}
