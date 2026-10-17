@@ -1,25 +1,25 @@
 ---
-title: Markdown Spoilers
+title: Markdown 剧透内容
 published: 2026-08-28
-description: Hide inline answers while keeping spoiler content accessible in Shirone Markdown.
-tags: [Demo, Markdown, Accessibility, Shirone]
-category: Guides
-lang: en
+description: 在 Shirone Markdown 中隐藏行内答案，同时确保剧透内容仍可访问。
+tags: [示例, Markdown, 无障碍, Shirone]
+category: 指南
+lang: zh-CN
 draft: false
 ---
 
-Spoilers conceal a short answer or plot detail without removing it from the document. Hover, focus, or activate the native control to reveal the content.
+剧透语法可以隐藏简短答案或剧情细节，但不会将其从文档中移除。将鼠标悬停在原生控件上、聚焦控件或激活控件，即可显示内容。
 
-## Inline details
+## 行内详情
 
-The answer is :spoiler[**42**], and this sentence remains ordinary Markdown around it.
+答案是 :spoiler[**42**]，周围的句子仍然是普通 Markdown。
 
-Spoilers can include `inline code` and :spoiler[a longer detail with **emphasis**].
+剧透内容也可以包含 `行内代码`，例如 :spoiler[带有 **强调** 的较长细节]。
 
-## Author syntax
+## 编写语法
 
 ```markdown
-The answer is :spoiler[42].
+答案是 :spoiler[42]。
 ```
 
-The generated HTML uses a native button with an `aria-expanded` state. Without JavaScript, hover and focus still reveal the text; the optional runtime adds click and keyboard toggling.
+生成的 HTML 使用带有 `aria-expanded` 状态的原生按钮。即使没有 JavaScript，鼠标悬停和键盘聚焦仍可显示文本；可选运行时则会添加点击和键盘切换功能。
