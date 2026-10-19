@@ -16,3 +16,16 @@ test("footer exposes the source theme version from package metadata", async ({
 	await expect(versionGroup.locator(":scope > span")).toHaveText("Version");
 	await expect(versionGroup).toHaveCSS("gap", "6px");
 });
+
+test("footer displays the local public security record icon and application status", async ({
+	page,
+}) => {
+	await page.goto("/", { waitUntil: "domcontentloaded" });
+
+	const record = page.locator(".footer-beian");
+	const icon = record.locator('img[src="/images/gongan-beian.png"]');
+
+	await expect(icon).toHaveAttribute("width", "20");
+	await expect(icon).toHaveJSProperty("naturalWidth", 20);
+	await expect(record).toContainText("公安备案：<正在申请>");
+});
