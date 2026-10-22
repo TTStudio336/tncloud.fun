@@ -1,5 +1,3 @@
-<div align="center">
-
 <img src="./public/logo/icon.png" width="88" height="88" alt="Shirone 图标" />
 
 # Lambent's blog
