@@ -1,96 +1,43 @@
-name: Deploy to server
+name: Deploy to Server
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-concurrency:
-  group: deploy
-  cancel-in-progress: true
-
-permissions:
-  contents: read
-
 jobs:
   build-and-deploy:
-    name: Build and deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      CI: true
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@4.2.2
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@4.1.0
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
-          version: 9.14.4
-          run_install: false
+          fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@4.3.0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version: 22.12.0
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
+          version: 9
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
 
-      - name: Build static site
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Static Site
         run: pnpm build
 
-      - name: Deploy with rsync over SSH
-        env:
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_PORT: ${{ secrets.SERVER_PORT }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          SERVER_KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
-          SERVER_TARGET: ${{ secrets.SERVER_TARGET }}
-        run: |
-          set -euo pipefail
-
-          : "${SERVER_HOST:?Add SERVER_HOST in repository Actions secrets}"
-          : "${SERVER_USER:?Add SERVER_USER in repository Actions secrets}"
-          : "${SERVER_SSH_KEY:?Add SERVER_SSH_KEY in repository Actions secrets}"
-          : "${SERVER_KNOWN_HOSTS:?Add SERVER_KNOWN_HOSTS in repository Actions secrets}"
-          : "${SERVER_TARGET:?Add SERVER_TARGET in repository Actions secrets}"
-
-          port="${SERVER_PORT:-22}"
-          if ! [[ "$port" =~ ^[0-9]+$ ]] || [ "$port" -lt 1 ] || [ "$port" -gt 65535 ]; then
-            echo "SERVER_PORT must be a number between 1 and 65535." >&2
-            exit 1
-          fi
-
-          target="${SERVER_TARGET%/}"
-          case "$target" in
-            /*) ;;
-            *)
-              echo "SERVER_TARGET must be an absolute server directory." >&2
-              exit 1
-              ;;
-          esac
-          case "$target" in
-            /|/home|/var|/var/www|/srv|/opt|/usr|/etc)
-              echo "SERVER_TARGET must be a dedicated site directory, not a shared parent directory." >&2
-              exit 1
-              ;;
-          esac
-
-          mkdir -p "$HOME/.ssh"
-          chmod 700 "$HOME/.ssh"
-          printf '%s\n' "$SERVER_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
-          chmod 600 "$HOME/.ssh/known_hosts"
-
-          key_file="$(mktemp)"
-          trap 'rm -f "$key_file"' EXIT
-          printf '%s\n' "$SERVER_SSH_KEY" > "$key_file"
-          chmod 600 "$key_file"
-
-          rsync --archive --compress --delete \
-            -e "ssh -i $key_file -p $port -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o GlobalKnownHostsFile=/dev/null" \
-            dist/ "$SERVER_USER@$SERVER_HOST:$target/"
+      - name: Deploy to Server via rsync
+        uses: easingthemes/ssh-deploy@v5
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: "-avz --delete"
+          SOURCE: "dist/"
+          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT || '22' }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          TARGET: ${{ secrets.SERVER_TARGET }}
