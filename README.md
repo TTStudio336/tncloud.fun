@@ -1,8 +1,11 @@
+<div align="center">
+
 <img src="./public/logo/icon.png" width="88" height="88" alt="Shirone 图标" />
 
 # Lambent's blog
 
 基于 Shirome 主题打造的个人博客。
+</div>
 
 > [!tip]
 > Shirone 是一个使用 Astro 7、Svelte 5、Tailwind CSS 4 和 Stylus 构建的静态个人博客主题。这里的魔法并不是堆叠华丽特效，而是藏在会随光线和心情变化的色彩里，藏在不打断氛围的翻页间，也藏在让个人小天地慢慢鲜活起来的细节中。
