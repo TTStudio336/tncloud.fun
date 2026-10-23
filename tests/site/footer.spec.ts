@@ -17,15 +17,24 @@ test("footer exposes the source theme version from package metadata", async ({
 	await expect(versionGroup).toHaveCSS("gap", "6px");
 });
 
-test("footer displays the local public security record icon and application status", async ({
+test("footer links the local public security record icon with the record number", async ({
 	page,
 }) => {
 	await page.goto("/", { waitUntil: "domcontentloaded" });
 
 	const record = page.locator(".footer-beian");
-	const icon = record.locator('img[src="/images/gongan-beian.png"]');
+	const policeLink = record.locator(
+		'a[href="https://beian.mps.gov.cn/#/query/webSearch?code=15052602000168"]',
+	);
+	const icon = policeLink.locator('img[src="/images/gongan-beian.png"]');
 
+	await expect(policeLink).toContainText("蒙公网安备15052602000168号");
+	await expect(policeLink).toHaveCSS("display", "inline-flex");
+	await expect(policeLink).toHaveCSS("align-items", "center");
 	await expect(icon).toHaveAttribute("width", "20");
 	await expect(icon).toHaveJSProperty("naturalWidth", 20);
-	await expect(record).toContainText("公安备案：<正在申请>");
+	await expect(record.locator(".beian-link")).toHaveCSS(
+		"color",
+		await policeLink.evaluate((link) => getComputedStyle(link).color),
+	);
 });
