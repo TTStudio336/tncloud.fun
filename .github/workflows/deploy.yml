@@ -1,25 +1,25 @@
-name: Deploy to Server
+name: Deploy Shirone Blog
 
 on:
   push:
     branches: [main]
+  repository_dispatch:
+    types: [content-updated]
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Theme Repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9.14.4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -28,16 +28,15 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Static Site
-        run: pnpm build
+      - name: Pull Private Content & Build
+        env:
+          CONTENT_REPO_URL: "https://x-access-token:${{ secrets.CONTENT_ACCESS_TOKEN }}@github.com/${{ github.repository_owner }}/my-blog-content.git"
+        run: |
+          pnpm content:sync
+          pnpm build
 
-      - name: Deploy to Server via rsync
-        uses: easingthemes/ssh-deploy@v5.1.0
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: "-avz --delete"
-          SOURCE: "dist/"
-          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
-          REMOTE_PORT: ${{ secrets.SERVER_PORT || '22' }}
-          REMOTE_USER: ${{ secrets.SERVER_USER }}
-          TARGET: ${{ secrets.SERVER_TARGET }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
