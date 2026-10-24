@@ -6,40 +6,27 @@ import type { ProjectItem } from "@/types/projectsConfig";
 
 export const projectsData: ProjectItem[] = [
 	{
-		key: "shirone",
-		title: "Shirone",
+		key: "recitingUs",
+		title: "背书哇！",
 		summary:
-			"An Astro blog theme shaped around an M3E component system, expressive content, and resilient client navigation.",
-		category: "theme",
-		phase: "building",
-		technologies: ["Astro", "Svelte", "TypeScript", "Tailwind CSS"],
-		icon: "material-symbols:deployed-code-outline-rounded",
-		cover: "/assets/projects/shirone.webp",
-		coverAlt: "Shirone theme homepage preview",
+			"一款帮助中国高中生学习文言文与古诗词的辅助工具，支持 Windows 与 Android。",
+		category: "android",
+		phase: "exploring",
+		technologies: [
+			".NET 10",
+			"C#",
+			"Avalonia",
+			"HTML",
+			"CSS",
+			"JavaScript",
+			"SQLite",
+		],
+		icon: "material-symbols",
+		cover: "/assets/projects/recitingUs.png",
+		coverAlt: "Reciting Us theme homepage preview",
 		featured: true,
-		repository: "https://github.com/LyraVoid/Shirone",
+		repository: "https://github.com/HelloZWH-0620/reciting-us",
 		year: "2026",
-	},
-	{
-		key: "folkpatch",
-		title: "FolkPatch",
-		summary: "A kernel-level root solution for Android, built on APatch.",
-		category: "android",
-		phase: "building",
-		technologies: ["Kotlin", "APatch", "Android"],
-		icon: "material-symbols:terminal-rounded",
-		repository: "https://github.com/LyraVoid/FolkPatch",
-	},
-	{
-		key: "kernelpatch",
-		title: "KernelPatch",
-		summary:
-			"A kernel patch framework that powers APatch-style root on Android by loading code into the running kernel.",
-		category: "android",
-		phase: "shipped",
-		technologies: ["C", "Linux Kernel", "Android"],
-		icon: "material-symbols:extension-outline-rounded",
-		repository: "https://github.com/lyravoid/KernelPatch",
 	},
 ];
 

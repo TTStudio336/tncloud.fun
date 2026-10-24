@@ -130,10 +130,17 @@ export const LinkPresets: Record<string, NavBarLink> = {
 	},
 	GitHub: {
 		name: "GitHub",
-		url: "https://github.com/LyraVoid/Shirone",
+		url: "https://github.com/TTStudio336/tncloud.fun/",
 		icon: "fa6-brands:github",
 		external: true,
 		pageKey: "github",
+	},
+	cloudDisk: {
+		name: "云盘",
+		url: "https://nas.tncloud.fun/",
+		icon: "material-symbols:cloud-outline-rounded",
+		external: true,
+		pageKey: "cloud-disk",
 	},
 };
 
@@ -147,22 +154,23 @@ const defaultNavBarConfig: NavBarConfig = {
 		// LinkPresets.Anime,
 		// LinkPresets.Compass,
 		// LinkPresets.Albums,
-		{
-			name: i18n(I18nKey.more),
-			icon: "material-symbols:apps-rounded",
-			children: [
-				// LinkPresets.Devices,
-				LinkPresets.Games,
-				// LinkPresets.Skills,
-				// 分类/标签入口不进导航菜单（避免菜单项过多），预设已登记指向独立页面，
-				// 需要时取消注释即可
-				// LinkPresets.Categories,
-				// LinkPresets.Tags,
-				LinkPresets.About,
-				LinkPresets.Friends,
-				LinkPresets.GitHub,
-			],
-		},
+		// {
+		// name: i18n(I18nKey.more),
+		// icon: "material-symbols:apps-rounded",
+		// children: [
+		// LinkPresets.Devices,
+		LinkPresets.Games,
+		// LinkPresets.Skills,
+		// 分类/标签入口不进导航菜单（避免菜单项过多），预设已登记指向独立页面，
+		// 需要时取消注释即可
+		// LinkPresets.Categories,
+		// LinkPresets.Tags,
+		LinkPresets.About,
+		LinkPresets.cloudDisk,
+		LinkPresets.Friends,
+		LinkPresets.GitHub,
+		// ],
+		// },
 	],
 };
 

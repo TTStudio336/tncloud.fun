@@ -9,7 +9,7 @@ export const announcementConfig: AnnouncementConfig = withUserConfig(
 	"announcement",
 	{
 		title: "", // 公告标题，填空使用 i18n 字符串 Key.announcement
-		content: "主页还在不断完善中...\n目前的所有文章都是框架自带的呢~", // 公告内容
+		content: "主页还在不断完善中...\n目前，除文章外，其他内容均已完成个性化，欢迎查看~", // 公告内容
 		closable: false, // 允许用户关闭公告
 		link: {
 			enable: true, // 启用链接
