@@ -5,7 +5,12 @@ updated: 2026-08-26
 pinned: true
 description: "全面介绍 Shirone 的文章编写、Frontmatter schema、Markdown 扩展、加密和媒体功能。"
 image: "./cover.jpeg"
-tags: ["Shirone", "指南", "Markdown", "M3E", "博客"]
+tags:
+  - Shirone
+  - 指南
+  - Markdown
+  - M3E
+  - 博客
 category: 指南
 lang: zh-CN
 draft: false
@@ -62,21 +67,21 @@ comment: true
 
 ### 支持的 Frontmatter 字段
 
-| 字段 | 类型 | 必填 | 说明 |
-| :--- | :--- | :---: | :--- |
-| `title` | `string` | **Yes** | 文章的主标题。 |
-| `published` | `Date` | **Yes** | `YYYY-MM-DD` 格式的发布日期。 |
-| `publishedAt` | `Date` | No | 用于排列同一天发布的文章的精确发布时间。按配置的站点时区计算后，日期必须与 `published` 相同。 |
-| `updated` | `Date` | No | 最后更新日期。填写后会显示更新提示徽标。 |
-| `updatedAt` | `Date` | No | Feed 和机器可读元数据使用的精确更新时间。必须与 `updated` 一起填写。 |
-| `pinned` | `boolean` | No | 将文章置顶显示在文章列表顶部（默认值：`false`）。 |
-| `description` | `string` | No | 显示在文章卡片、搜索结果和 OpenGraph 元数据中的文章摘要。 |
-| `image` | `string` | No | 封面图片路径。支持相对路径（`./cover.webp`）、公共路径（`/images/cover.jpg`）或远程 URL。 |
-| `tags` | `string[]` | No | 用于分类筛选和标签云的标签名称数组。 |
-| `category` | `string` | No | 用于分类索引的主要分类名称。 |
-| `draft` | `boolean` | No | 将文章标记为草稿。生产构建时会隐藏草稿文章（`pnpm build`）。 |
-| `comment` | `boolean` | No | 为当前文章启用或禁用评论区（默认值：`true`）。 |
-| `lang` | `string` | No | 语言代码（如 `en`、`zh_CN`、`ja`），仅在与站点默认语言不同时填写。 |
+| 字段          | 类型       |  必填   | 说明                                                                                          |
+| :------------ | :--------- | :-----: | :-------------------------------------------------------------------------------------------- |
+| `title`       | `string`   | **Yes** | 文章的主标题。                                                                                |
+| `published`   | `Date`     | **Yes** | `YYYY-MM-DD` 格式的发布日期。                                                                 |
+| `publishedAt` | `Date`     |   No    | 用于排列同一天发布的文章的精确发布时间。按配置的站点时区计算后，日期必须与 `published` 相同。 |
+| `updated`     | `Date`     |   No    | 最后更新日期。填写后会显示更新提示徽标。                                                      |
+| `updatedAt`   | `Date`     |   No    | Feed 和机器可读元数据使用的精确更新时间。必须与 `updated` 一起填写。                          |
+| `pinned`      | `boolean`  |   No    | 将文章置顶显示在文章列表顶部（默认值：`false`）。                                             |
+| `description` | `string`   |   No    | 显示在文章卡片、搜索结果和 OpenGraph 元数据中的文章摘要。                                     |
+| `image`       | `string`   |   No    | 封面图片路径。支持相对路径（`./cover.webp`）、公共路径（`/images/cover.jpg`）或远程 URL。     |
+| `tags`        | `string[]` |   No    | 用于分类筛选和标签云的标签名称数组。                                                          |
+| `category`    | `string`   |   No    | 用于分类索引的主要分类名称。                                                                  |
+| `draft`       | `boolean`  |   No    | 将文章标记为草稿。生产构建时会隐藏草稿文章（`pnpm build`）。                                  |
+| `comment`     | `boolean`  |   No    | 为当前文章启用或禁用评论区（默认值：`true`）。                                                |
+| `lang`        | `string`   |   No    | 语言代码（如 `en`、`zh_CN`、`ja`），仅在与站点默认语言不同时填写。                            |
 
 ---
 
@@ -162,7 +167,10 @@ Shirone 开箱即用地集成了多种现代 Markdown 扩展：
 
 ```typescript title="src/utils/theme.ts" {2,4-5}
 // 动态派生 HCT 颜色令牌
-import { argbFromHex, themeFromSourceColor } from "@material/material-color-utilities";
+import {
+  argbFromHex,
+  themeFromSourceColor,
+} from "@material/material-color-utilities";
 
 const theme = themeFromSourceColor(argbFromHex("#f472b6"));
 console.log("主色令牌：", theme.schemes.light.primary);
