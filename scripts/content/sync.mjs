@@ -27,8 +27,11 @@ import {
 	writeFileSync,
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { CONFIG_DIRECTORY } from "./config-domains.mjs";
-import { syncUserConfig } from "./config-overlay.mjs";
+import {
+	CONFIG_DIRECTORY,
+	GENERATED_CONFIG_FILE,
+} from "./config-domains.mjs";
+import { EMPTY_MODULE, syncUserConfig } from "./config-overlay.mjs";
 import {
 	canonicalGitUrl,
 	LOCK_FILE,
@@ -423,6 +426,11 @@ function readPreviousConfigFiles() {
 function runSync() {
 	const resolved = resolveContentSource(ROOT);
 	if (resolved.mode === "local") {
+		const generatedConfig = join(ROOT, GENERATED_CONFIG_FILE);
+		if (!options.dryRun && !existsSync(generatedConfig)) {
+			mkdirSync(dirname(generatedConfig), { recursive: true });
+			writeFileSync(generatedConfig, EMPTY_MODULE);
+		}
 		// 主题自带内容：保持静默，`pnpm dev` / `pnpm build` 的输出不受影响。
 		return null;
 	}

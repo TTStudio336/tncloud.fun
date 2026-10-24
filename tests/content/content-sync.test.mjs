@@ -121,6 +121,10 @@ describe("content sync", () => {
 			const { stdout } = runSync(fixture, { env: { CONTENT_DIR: "" } });
 			assert.equal(stdout, "");
 			assert.ok(!exists(fixture, "content.lock.json"));
+			assert.match(
+				read(fixture, "src/user/user-config.ts"),
+				/export const userConfigOverrides/,
+			);
 			// 主题自带内容必须原封不动。
 			assert.ok(exists(fixture, "src/content/posts/legacy-demo.md"));
 		} finally {
@@ -135,7 +139,23 @@ describe("content sync", () => {
 				env: { SHIRONE_CONTENT_SYNC: "0" },
 			});
 			assert.equal(stdout, "");
+			assert.match(
+				read(fixture, "src/user/user-config.ts"),
+				/export const userConfigOverrides/,
+			);
 			assert.ok(exists(fixture, "src/content/posts/legacy-demo.md"));
+		} finally {
+			rmSync(fixture.base, { recursive: true, force: true });
+		}
+	});
+
+	it("local 模式保留已存在的生成配置覆盖层", () => {
+		const fixture = createFixture();
+		try {
+			const existing = "export const userConfigOverrides = { site: {} };\n";
+			write(fixture.repo, "src/user/user-config.ts", existing);
+			runSync(fixture, { env: { SHIRONE_CONTENT_SYNC: "0" } });
+			assert.equal(read(fixture, "src/user/user-config.ts"), existing);
 		} finally {
 			rmSync(fixture.base, { recursive: true, force: true });
 		}
