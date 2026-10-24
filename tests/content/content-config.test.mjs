@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {
+	existsSync,
 	mkdirSync,
 	mkdtempSync,
 	readFileSync,
@@ -200,17 +201,17 @@ describe("读取内容仓配置", () => {
 });
 
 describe("生成覆盖层模块", () => {
-	it("没有覆盖时与仓库里已提交的空模块完全一致", () => {
-		const committed = readFileSync(
-			new URL(`../../${GENERATED_CONFIG_FILE}`, import.meta.url),
-			"utf8",
-		);
-		// 没有这条一致性，local 模式下重新生成就会弄脏 git status。
-		// 比对前抹平换行：Windows 的 core.autocrlf 会把签出的文件变成 CRLF，
-		// 而生成器一律写 LF —— git 自己会归一化，这里也照做。
-		const normalize = (text) => text.split("\r\n").join("\n");
-		assert.equal(generateModule([]).source, EMPTY_MODULE);
-		assert.equal(normalize(committed), EMPTY_MODULE);
+	it("没有覆盖时生成标准空模块", () => {
+		const { base } = createConfigDirectory({});
+		try {
+			syncUserConfig({ root: base, sourceRoot: base });
+			assert.equal(
+				readFileSync(join(base, GENERATED_CONFIG_FILE), "utf8"),
+				EMPTY_MODULE,
+			);
+		} finally {
+			rmSync(base, { recursive: true, force: true });
+		}
 	});
 
 	it("按领域标注类型，并把类型导入合并去重", () => {
@@ -334,7 +335,8 @@ describe("类型校验（真实 tsc，跑在本仓库上）", () => {
 	 */
 	function validate(files) {
 		const { base, directory } = createConfigDirectory(files);
-		const before = readFileSync(generated, "utf8");
+		const existedBefore = existsSync(generated);
+		const before = existedBefore ? readFileSync(generated, "utf8") : null;
 		try {
 			return syncUserConfig({
 				root: repoRoot,
@@ -342,7 +344,14 @@ describe("类型校验（真实 tsc，跑在本仓库上）", () => {
 				dryRun: true,
 			});
 		} finally {
-			assert.equal(readFileSync(generated, "utf8"), before, "生成物应被还原");
+			assert.equal(
+				existsSync(generated),
+				existedBefore,
+				"生成物的存在状态应被还原",
+			);
+			if (existedBefore) {
+				assert.equal(readFileSync(generated, "utf8"), before, "生成物应被还原");
+			}
 			rmSync(base, { recursive: true, force: true });
 		}
 	}

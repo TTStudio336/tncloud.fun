@@ -46,7 +46,7 @@ function git(cwd, gitArgs) {
 /**
  * 运行清理脚本，返回 stdout + stderr 的合并输出（告警走 stderr）。
  *
- * 显式清空内容源环境变量：否则开发机上真实存在的 `CONTENT_DIR` 会渗进夹具，
+ * 显式清空内容源环境变量与同步开关：否则开发机或 CI 环境会渗进夹具，
  * 让「内容源仍然生效」这类断言随环境漂移。
  */
 function clean(cwd, args = []) {
@@ -59,6 +59,7 @@ function clean(cwd, args = []) {
 			CONTENT_DIR: "",
 			CONTENT_REPO_URL: "",
 			CONTENT_REPO_REF: "",
+			SHIRONE_CONTENT_SYNC: "",
 		},
 	});
 	const output = `${result.stdout ?? ""}${result.stderr ?? ""}`;

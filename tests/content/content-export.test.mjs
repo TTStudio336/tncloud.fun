@@ -5,8 +5,8 @@
  * 代码仓里同时放好已提交的物化内容、主题自有资产、构建期生成物豁免路径与全套配置模块，
  * 因为导出的正确性恰恰取决于它能不能把这几类文件区分开。
  *
- * 环境变量 `CONTENT_DIR` / `CONTENT_REPO_URL` / `CI` 一律显式清空：
- * 开发机上真实存在的 `.env` 会渗进夹具，让「local 模式拒绝」这类断言随环境漂移。
+ * 环境变量 `CONTENT_DIR` / `CONTENT_REPO_URL` / `SHIRONE_CONTENT_SYNC` / `CI` 一律显式清空：
+ * 开发机配置或 CI 的全局 local-mode 开关会渗进夹具，让断言随环境漂移。
  */
 
 import assert from "node:assert/strict";
@@ -92,6 +92,7 @@ function run(script, cwd, args = [], env = {}) {
 			CONTENT_DIR: "",
 			CONTENT_REPO_URL: "",
 			CONTENT_REPO_REF: "",
+			SHIRONE_CONTENT_SYNC: "",
 			CI: "",
 			...env,
 		},

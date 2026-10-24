@@ -49,8 +49,7 @@ const VALIDATION_STAMP = "node_modules/.cache/shirone/user-config.ok";
 /**
  * 没有任何用户覆盖时生成物的内容。
  *
- * 与仓库中已提交的 `src/user/user-config.ts` 逐字节相同：`local` 模式下重新生成
- * 不会弄脏 `git status`，这是内容分离对主题使用者的基本承诺。
+ * `local` 模式下重新生成会写入此标准空模块，不会改变主题配置的有效值。
  */
 export const EMPTY_MODULE = `/**
  * 用户配置覆盖层（由 \`pnpm content:sync\` 生成，请勿手工编辑）。
