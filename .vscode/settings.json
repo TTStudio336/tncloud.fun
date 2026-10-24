@@ -144,5 +144,8 @@
 			"config/series.yml"
 		]
 	},
-	"markdown.validate.enabled": true
+	"markdown.validate.enabled": true,
+	"[github-actions-workflow]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
 }
