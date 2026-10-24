@@ -57,6 +57,7 @@ jobs:
     timeout-minutes: 15
     env:
       CI: true
+      CONTENT_DIRECTORY: .content-src
 
     steps:
       - name: Checkout
@@ -78,10 +79,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Initialize local config overlay
+      # Private content is needed for Astro's eager imports of user data modules.
+      # Do not expose the content token to pull-request code.
+      - name: Checkout private content
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: TTStudio336/shirome-blog-content
+          ref: master
+          path: ${{ env.CONTENT_DIRECTORY }}
+          token: ${{ secrets.CONTENT_ACCESS_TOKEN }}
+          persist-credentials: false
+
+      - name: Materialize private content
+        if: github.event_name != 'pull_request'
+        env:
+          CONTENT_DIR: ${{ github.workspace }}/${{ env.CONTENT_DIRECTORY }}
+          SHIRONE_CONTENT_SYNC: "1"
         run: pnpm content:sync
 
       - name: Check Astro diagnostics
+        if: github.event_name != 'pull_request'
         run: pnpm exec astro check
 
       - name: Validate atom manifest
@@ -92,6 +110,7 @@ jobs:
 
   build:
     name: Build (Node.js ${{ matrix.node }})
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
@@ -100,6 +119,7 @@ jobs:
         node: [22, 24]
     env:
       CI: true
+      CONTENT_DIRECTORY: .content-src
 
     steps:
       - name: Checkout
@@ -120,6 +140,21 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Checkout private content
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: TTStudio336/shirome-blog-content
+          ref: master
+          path: ${{ env.CONTENT_DIRECTORY }}
+          token: ${{ secrets.CONTENT_ACCESS_TOKEN }}
+          persist-credentials: false
+
+      - name: Materialize private content
+        env:
+          CONTENT_DIR: ${{ github.workspace }}/${{ env.CONTENT_DIRECTORY }}
+          SHIRONE_CONTENT_SYNC: "1"
+        run: pnpm content:sync
 
       - name: Build production site
         run: pnpm build
