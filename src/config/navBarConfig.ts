@@ -165,7 +165,7 @@ const defaultNavBarConfig: NavBarConfig = {
 		// 需要时取消注释即可
 		// LinkPresets.Categories,
 		// LinkPresets.Tags,
-		LinkPresets.About,
+		// LinkPresets.About,
 		LinkPresets.cloudDisk,
 		LinkPresets.Friends,
 		LinkPresets.GitHub,
