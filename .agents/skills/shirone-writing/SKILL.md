@@ -5,7 +5,7 @@ description: Writing blog posts and moments for a Shirone blog - frontmatter sch
 
 # Shirone 内容写作(文章与动态)
 
-内容放在 `src/content/posts/`(文章,支持 `.md`/`.mdx`)与 `src/content/moments/`(动态,仅 `.md`)。Schema 定义在 `src/content.config.ts`。相册不属于 Content Collection，改用 `shirone-data`。
+文章（支持 `.md`/`.mdx`）与动态（仅 `.md`）属于内容集合，schema 定义在 `src/content.config.ts`。源码仓与 npm 包模式下的内容路径不同，按 `docs/packaging-contract.md` 和 `docs/npm-package-mode.md` 确认。相册不属于 Content Collection，改用 `shirone-data`。
 
 ## 文章 frontmatter
 
@@ -46,7 +46,7 @@ hideHomeContent: true   # 加密内容在首页隐藏(默认 true)
 
 ## 系列(series)
 
-- 系列实体放在 `src/content/series/<slug>.md`，frontmatter 为 `title`（必填）、`status: "ongoing" | "completed"`（默认 `ongoing`）、`defaultCategory`（可选）；正文是可选系列总览。实体须平铺在该目录根下，slug 即单个路由段（`/series/<slug>/`），不要用 `a/b` 嵌套目录。
+- 系列实体按 `docs/content-separation/README.md` 中的内容目录约定存放，frontmatter 为 `title`（必填）、`status: "ongoing" | "completed"`（默认 `ongoing`）、`defaultCategory`（可选）；正文是可选系列总览。实体须平铺在系列目录根下，slug 即单个路由段（`/series/<slug>/`），不要用 `a/b` 嵌套目录。
 - 文章用 `series` 填系列 slug、`seriesOrder` 填系列内位置；一篇文章最多属于一个系列，两者都可省略（省略即普通文章）。
 - 分类回退链：`post.category` → `series.defaultCategory` → 未分类，显式 `category` 始终优先；单一解析点为 `resolveSeriesPostCategory`（`src/utils/series-utils.ts`）。
 - 阅读顺序：`seriesOrder` 优先；仅部分文章标注时，未标注项按发布日期排在标注项之后，同序再按 slug 兜底。
@@ -59,13 +59,13 @@ hideHomeContent: true   # 加密内容在首页隐藏(默认 true)
 
 ## 工作流
 
-1. 脚手架:`pnpm.cmd new-post <filename>` 生成 `src/content/posts/<filename>.md` 骨架(含按站点时区算好的 `published` + `publishedAt`,见「日期与排序」);
+1. 脚手架:`pnpm.cmd new-post <filename>` 生成文章骨架(含按站点时区算好的 `published` + `publishedAt`,见「日期与排序」);
 2. 写正文:自定义语法直接使用,无需任何启用开关(见 `shirone-markdown-syntax` 技能);图片可用相对路径引用同目录资源;
 3. 本地预览:`pnpm.cmd dev` 后访问 `http://localhost:4321`。
 
 ## 现成范例(demo 文章即文档)
 
-`src/content/posts/` 下的示例文章同时是语法文档,写作前可参考:`markdown.md`(基础)、`markdown-extended.md`(扩展语法)、`admonitions.md`、`spoilers.md`、`steps.md`、`option-groups.md`、`collapse-panels.md`、`marker-highlights.md`、`markdown-abbreviations.md`、`markdown-mermaid.md`、`expressive-code.md`、`encrypted-demo.md`(加密)、`video.md`、`image-grid-demo/`(图片画廊)、`markdown-includes.md`(文件包含)。
+主题提供的示例文章同时是语法文档,写作前可参考当前内容目录中的 Markdown 示例,以及 `docs/markdown-extensions.md`。
 
 ## 注意事项
 
@@ -77,9 +77,8 @@ hideHomeContent: true   # 加密内容在首页隐藏(默认 true)
 
 - `src/content.config.ts` — posts/moments 的 zod schema 权威定义
 - `scripts/new-post.js` — `pnpm new-post` 脚手架行为
-- `src/content/posts/` — 示例文章(语法活文档)
-- `src/content/moments/` — 动态示例
+- `docs/content-separation/README.md` — 内容目录结构与模式差异
 
 ## npm 包模式内容路径
 
-在运行 `npx.cmd shirones init` 初始化的项目中，将文章和 moments 写入 `shirones/content/posts/` 与 `shirones/content/moments/`。不要编辑 `node_modules/shirones/src/content/`；包模式路径以及 include/图片的归属规则见 `docs/npm-package-mode.md` 和 `docs/packaging-contract.md`。
+在运行 `npx.cmd shirones init` 初始化的项目中，文章和 moments 写入用户项目的 `shirones/content/`。不要编辑 `node_modules/shirones/`；包模式路径以及 include/图片的归属规则见 `docs/npm-package-mode.md` 和 `docs/packaging-contract.md`。

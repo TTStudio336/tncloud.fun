@@ -7,14 +7,14 @@ description: Managing Shirone data-backed pages and albums - adding or editing a
 
 ## 先判断归属
 
-- 文章和动态写入 `src/content/`，使用 `shirone-writing`。
+- 文章和动态属于内容集合，使用 `shirone-writing`；内容路径按当前项目模式与 `docs/packaging-contract.md` 确定。
 - 页面行为、开关、排序和凭据写入 `src/config/`，使用 `shirone-config`。
 - 具体条目内容写入 `src/data/`；不要把内容实体塞进 config。
-- 相册不是 Content Collection，而是 `public/images/albums/` 下的目录数据。
+- 相册不是 Content Collection，而是按 `src/utils/album-scanner.ts` 的扫描规则组织的目录数据。
 
 ## 数据页工作流
 
-1. 先阅读对应类型和数据文件：`src/types/<domain>Config.ts`、`src/data/<domain>.ts`，确认字段和现有条目形状。
+1. 先阅读对应类型和数据文件：`src/types/`、`src/data/`，确认字段和现有条目形状。
 2. 只修改内容实体；筛选、排序、页面开关使用对应 `src/config/*Config.ts` 的 `categories`、`disabledKeys`、`order` 和 `enable`。
 3. 新增条目后运行 `npx.cmd astro check`、`pnpm.cmd check:manifest`，并执行对应页面测试，例如 `tests/site/friends.spec.ts`、`tests/site/anime.spec.ts`、`tests/site/projects.spec.ts`、`tests/site/devices.spec.ts`、`tests/site/games.spec.ts`、`tests/site/timeline.spec.ts`。
 
